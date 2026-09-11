@@ -1,0 +1,2368 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASTARA VISTA</title>
+    <style>
+        /* Reset CSS */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        @font-face {
+            font-family: 'Futura Hv BT';
+            src: url('D:\01. PARSA\1. OSIS WEB\font/FutuHv.ttf') format('ttf');
+            font-weight: normal;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'Futura XBlk BT';
+            src: url('D:\01. PARSA\1. OSIS WEB\font/FutuXBlk.ttf') format('ttf');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        body, html {
+            height: 100%;
+            overflow: hidden;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+            font-family: Futura Hv BT;
+        }
+        
+        /* Navbar Horizontal */
+        .navbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        max-width: 450px;
+        position: fixed;
+        margin: 10px;
+        z-index: 1;
+        gap: 20px;
+        padding-right: 20px;
+        }
+
+        .navbar a {
+        text-decoration: none;
+        color: rgba(0, 0, 0, 0.5);
+        font-family: 'Futura Hv BT', sans-serif;
+        font-size: 15px;
+        font-weight: 500;
+        position: relative;
+        transition: color 0.3s ease;
+        }
+
+        .navbar a:hover {
+        color: rgb(0, 0, 0);
+        }
+
+        .navbar a.active {
+        color: rgb(0, 0, 0);
+        font-weight: bold;
+        }
+
+        /* Hapus pseudo-element */
+        .navbar a::after {
+        display: none;
+        }
+
+        /* Indicator */
+        .nav-indicator {
+        position: absolute;
+        bottom: 15px;
+        height: 3px;
+        background-color: #0021f5;
+        border-radius: 10px;
+        transition: left 0.3s ease, width 0.3s ease;
+        pointer-events: none;
+        }
+
+        
+        /* Konten Utama */
+        .main-content {
+            height: 100%;
+            overflow: hidden;
+        }
+        
+        /* Konten Section */
+        .section {
+            height: 100%;
+            padding: 20px;
+            padding-top: 80px;
+            display: none;
+            overflow: hidden;
+        }
+        
+        .section.active {
+            display: block;
+            overflow: auto;
+        }
+        
+        /* Styling untuk Home */
+        #home {
+            /* background-color: #ecf0f1; */
+            background: linear-gradient(180deg, #f8fbff 0%, #eef3f9 100%);
+            text-align: center;
+        }
+        
+        .cards {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            gap: 10px;
+            margin-bottom: 10px;
+            margin-top: 60px;
+        }
+        .card {
+            width: 400px;
+            height: 300px;
+            background: #ccc;
+            object-fit: cover;
+            border-radius: 10px;
+            box-shadow: 0 0 30px rgb(0, 33, 245, 0.4); /* glow lembut biru */
+        }
+        .card.middle {
+            width: 500px;
+            height: 340px;
+        }
+
+        h1 {
+            font-style: 'Futura XBlk BT';
+            font-size: 40px;
+            font-weight: 800;
+            margin: 20px 0 10px;
+        }
+        .desc {
+            font-size: 20px;
+            color: gray;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .button-to-album {
+            background-color: #0021f5;
+            color: white;
+            font-size: 18px;
+            border: none;
+            padding: 12px 36px;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(0, 33, 245, 0.25);
+            transition: all 0.3s ease;
+        }
+
+        .button-to-album:hover {
+            background-color: #001bd3;
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px rgba(0, 33, 245, 0.35);
+        }
+        
+        /* Styling untuk Member */
+        #member {
+            background-color: #e8f4f8;
+            overflow: hidden;
+        }
+
+        .division-filter {
+            display: flex;
+            gap: 10px;
+            padding-bottom: 10px;
+            /* overflow-x: auto; */
+            position: sticky;
+            z-index: 100;
+            justify-content: center;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 20px;
+            background: #f0f0f0;
+            color: #333;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+            font-family: 'Futura Hv BT', sans-serif;
+            font-size: 14px;
+        }
+
+        .filter-btn:hover {
+            background: #e0e0e0;
+        }
+
+        .filter-btn.active {
+            background: #0021f5;
+            color: white;
+        }
+        
+        /* Member List Container */
+        .member-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 20px;
+            padding-top: 5px;
+            padding-bottom: 40px;
+            padding-right: 25px;
+            padding-left: 40px;
+            max-height: 95%; /* atau berapa pun sesuai kebutuhan */
+            overflow-y: auto;
+        }
+
+        .member-list::-webkit-scrollbar{
+            display: block;
+        }
+
+        /* Member Card Style */
+        .member-card {
+            position: relative;
+            border-radius: 10px;
+            overflow: hidden;
+            aspect-ratio: 1/1; /* Membuat card selalu persegi */
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .member-card:hover {
+            transform: translateY(-5px);
+        }
+
+        /* Member Photo */
+        .member-photo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: all 0.3s ease;
+        }
+
+        /* Member Info (muncul saat hover) */
+        .member-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,33,245,0.8), transparent);
+            color: white;
+            padding: 15px;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+            text-align: center;
+            transform: translateY(0);
+        }
+
+        /* .member-card:hover .member-info {
+            transform: translateY(0);
+        } */
+
+        /* Text Styling */
+        .member-name {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-family: 'Futura Hv BT', sans-serif;
+        }
+
+        .member-division {
+            font-size: 12px;
+            opacity: 1;
+            transition: opacity 0.3s ease 0.1s;
+            font-family: 'Futura Hv BT', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+
+        
+        /* Halaman Detail Member */
+        .member-page {
+            display: none;
+            height: 100%;
+        }
+        
+        .member-page.active {
+            display: flex;
+            overflow: hidden;
+        }
+        
+        /* LEFT SECTION */
+        .member-left {
+            width: 65%;
+            height: 100%;
+            padding: 20px;
+            background-color: #f9f9f9;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        .background-text {
+            font-family: Futura XBlk BT;
+            position: absolute;
+            top: 45%;
+            left: -3%;
+            transform: translateY(-50%);
+            font-size: 300px;
+            font-weight: bold;
+            color: rgba(0, 0, 0, 0.1);
+            z-index: 1;
+            white-space: nowrap; /* Mencegah text wrapping */
+            transition: font-size 0.3s ease;
+            pointer-events: none; /* Agar tidak mengganggu interaksi */
+        }
+
+        .background-text-0 {
+            font-family: Futura XBlk BT;
+            position: absolute;
+            top: 45%;
+            left: -3%;  
+            transform: translateY(-50%);
+            font-size: 300px;
+            font-weight: bold;
+            color: rgba(255, 255, 255);
+            z-index: 1;
+            white-space: nowrap; /* Mencegah text wrapping */
+            transition: font-size 0.3s ease;
+            pointer-events: none; /* Agar tidak mengganggu interaksi */
+        }
+
+        .background-image {
+            position: absolute;
+            top: 79%;
+            left: 7%; /* Atur sesuai posisi yang diinginkan */
+            transform: translateY(-50%);
+            max-height: 270px;
+            opacity: 0.5; /* Biar menyatu dengan background */
+            z-index: 0;
+            pointer-events: none;
+            white-space: nowrap;
+            border-radius: 50%;
+            object-fit: cover;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2); /* opsional, kasih bayangan */
+        }
+
+        .member-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            margin-left: 50px;
+            position: absolute;
+            top: 45%;                /* Turunkan 50% dari parent */
+            transform: translateY(-50%); /* Geser ke atas setengah tinggi elemen */
+            margin-left: 50px;
+            z-index: 1;
+        }
+        .character-name {
+            font-size: clamp(30px, 5vw, 60px);
+            font-weight: bold;
+            padding-top: 15px;
+            padding-bottom: 15px;
+        }
+        .button {
+            margin-top: 125px;
+            margin-left: 30px;
+            padding: 10px 20px; /* Padding lebih seimbang */
+            border: 2px solid black;
+            background: white;
+            cursor: pointer;
+            border-radius: 20px;
+            opacity: 0.5;
+            max-width: 200px; /* Lebar minimal */
+            transition: all 0.3s ease;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+            
+            /* Flexbox untuk penyejajaran tengah */
+            display: flex;
+            justify-content: center; /* Rata tengah horizontal */
+            align-items: center; /* Rata tengah vertikal */
+            text-align: center; /* Backup untuk teks */
+        }
+        .button:hover {
+            transform: translateY(-3px);
+            opacity: 1;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+        }
+        .button:active {
+        transform: scale(0.98); /* Efek tekan saat diklik */
+        }
+
+        /* RIGHT SECTION */
+        .member-right {
+            width: 35%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            z-index: 1;
+        }
+        
+        .top-right {
+            color: white;
+            padding: 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .top-right.research {
+            background: linear-gradient(rgba(0, 33, 245, 0.6), rgba(0, 33, 245, 0.6)),
+                        url('background-image/Research & Development.jpg') center/cover no-repeat, #0021f5;
+        }
+
+        .top-right.social {
+            background: linear-gradient(rgba(0, 33, 245, 0.6), rgba(0, 33, 245, 0.6)),
+                        url('background-image/Social.jpg') center/cover no-repeat, #0021f5;
+        }
+
+        .top-right.language {
+            background: linear-gradient(rgba(0, 33, 245, 0.6), rgba(0, 33, 245, 0.6)),
+                        url('background-image/Language.jpg') center/cover no-repeat, #0021f5;
+        }
+
+        .top-right.mps {
+            background: linear-gradient(rgba(0, 33, 245, 0.6), rgba(0, 33, 245, 0.6)),
+                        url('background-image/MPS.jpg') center/cover no-repeat, #0021f5;
+        }
+
+        .top-right.intos {
+            background: linear-gradient(rgba(0, 33, 245, 0.6), rgba(0, 33, 245, 0.6)),
+                        url('background-image/INTOS.jpg') center/cover no-repeat, #0021f5;
+        }
+
+        .top-right.art {
+            background: linear-gradient(rgba(0, 33, 245, 0.6), rgba(0, 33, 245, 0.6)),
+                        url('background-image/Art & Sport.jpg') center/cover no-repeat, #0021f5;
+        }
+
+        .music-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: top;
+            padding: 25px;
+        }
+        .music-info {
+            flex: 1;
+            overflow: hidden; /* Pastikan teks berlebih tidak terlihat */
+            position: relative;
+            width: 200px;
+        }
+        .music-info p {
+            margin: 2px 0;
+            line-height: 1.2;
+            white-space: nowrap; /* Teks tidak wrap ke baris baru */
+        }
+
+        .playbar-container {
+            width: 100%;
+            margin: 10px 0;
+            cursor: pointer;
+        }
+
+        .playbar {
+            width: 100%;
+            height: 4px;
+            background-color: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+            margin-bottom: 5px;
+            position: relative;
+        }
+        
+        .progress {
+            width: 0%;
+            height: 100%;
+            background-color: white;
+            border-radius: 2px;
+            position: relative;
+        }
+        .progress-handle {
+            width: 12px;
+            height: 12px;
+            background-color: white;
+            border-radius: 50%;
+            position: absolute;
+            right: -6px;
+            top: 50%;
+            transform: translateY(-50%);
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        .time-info {
+            display: flex;
+            justify-content: space-between;
+            color: white;
+            font-size: 10px;
+            opacity: 0.7;
+        }
+        .play-button {
+            font-family: Futura Hv BT;
+            background: white;
+            color: black;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+            margin-top: 5px; /* Reduced space above button */
+            width: 100%;
+            border-radius: 10px;
+            transition: transform 0.3s ease;
+        }
+        .play-button:hover {
+            transform: translateY(-3px);
+            opacity: 1;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .play-button:active {
+            transform: scale(0.98); /* Efek tekan saat diklik */
+        }
+        .album-cover {
+            max-width: 100px;
+            max-height: 100px;
+            margin-left: 20px;
+            border-radius: 10px;
+            position: relative;
+            border-radius: 50px;
+        }
+        .divider {
+            height: 1px;
+            background-color: rgba(255, 255, 255, 1); /* Light white line */
+            margin: 0px 0; /* Space above and below the line */
+            margin-left: 25px;
+            width: 88%;
+            display:flex;
+            justify-content: center;
+        }
+        .laptop {
+            display: flex;
+            /* justify-content: space-between; */
+            align-items: center;
+            margin: 25px;
+        }
+        .foto {
+            min-width: 150px;
+            min-height: 150px;
+            max-width: 150px;
+            max-height: 150px;
+            margin-right: 20px;
+            border-radius: 10px;
+            object-fit: cover;
+        }
+        .laptop-info p {
+            justify-content: left;
+            margin: 3px 0; /* Reduced spacing between lines */
+            line-height: 1.2; /* Tighter line spacing */
+        }
+        .bottom-right {
+            background: linear-gradient(rgb(0, 12, 90, 0.6), rgb(0, 12, 90, 0.6)),
+            url('icon/social media.png') center/cover no-repeat, #000c5a;
+            color: white;
+            padding: 20px;
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .panah {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.3s ease; /* Efek animasi saat hover */
+            background-color: white;
+            padding: 0px 20px;
+            border-radius: 30px;
+        }
+
+        .panah img {
+            width: 30px;
+            height: 30px;
+            background-color: white;
+        }
+
+        .panah:hover {
+            transform: translateY(-3px);
+            opacity: 1;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .panah:active {
+            transform: scale(0.98); /* Efek tekan saat diklik */
+        }
+
+        
+        /* Styling untuk Photos */
+        #album {
+            background-color: #f9f9f9;
+            /* padding-top: 120px; */
+            overflow-y: hidden;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            text-align: center;
+            /* padding: 10px 0; */
+            overflow-y: auto;
+            max-height: 100%;
+        }
+
+        .box {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            max-width: 98%;
+            gap: 13px;
+        }
+
+        .column {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .column img, .column video {
+            width: 100%;
+            transition: transform 0.3s;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .column img:hover, .column video:hover {
+            transform: scale(1.02);
+        }
+
+        /* Modal/Overlay */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-background {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+        }
+
+        .modal-content {
+            width: auto;
+            height: 80%;
+        }
+
+        .modal-content img, .modal-content video {
+            width: auto;
+            height: 100%;
+            border-radius: 5px;
+        }
+        
+        /* Responsive Design */
+        @media screen and (max-width: 992px) {
+            .member-page {
+                flex-direction: column;
+            }
+            
+            .member-left,
+            .member-right {
+                width: 100%;
+                height: auto;
+            }
+            
+            .member-right {
+                box-shadow: none;
+                border-top: 1px solid #eee;
+            }
+        }
+        
+        @media screen and (max-width: 600px) {
+            .navbar ul {
+                flex-direction: column;
+            }
+            
+            .navbar li {
+                width: 100%;
+            }
+            
+            .member-profile {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .member-profile img {
+                margin-right: 0;
+                margin-bottom: 20px;
+            }
+        }
+
+        .mini-player-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            transition: all 0.3s ease;  /* Animasi mengikuti drag */
+            z-index: 1000;
+        }
+
+        .mini-player {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgb(0, 33, 245, 0.8);
+            color: white;
+            padding: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            width: 40px;
+            height: 40px;
+            overflow: hidden;
+        }
+        .mini-player.animate {
+            transition: all 0.3s ease;
+        }
+
+        /* Saat mini player diperbesar - mengembang ke kiri */
+        .mini-player.expanded {
+            width: 300px;
+            height: 60px;
+            border-radius: 30px;
+            right: 20px;
+            justify-content: space-between;
+            padding: 0 15px;
+        }
+
+        /* Ikon musik yang tetap terlihat */
+        .mini-icon {
+            font-size: 20px;
+            flex-shrink: 0;
+            /* margin-left: 5px; */
+            padding-right: 2px;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+
+        /* Kontainer info lagu */
+        .mini-song-info {
+            display: none;
+            flex-direction: column;
+            margin-right: auto;
+            margin-left: 10px;
+            width: 120px;
+            overflow: hidden;
+        }
+
+        .mini-player.expanded .mini-song-info {
+            display: flex;
+        }
+
+        .mini-song-info .song-title {
+            font-weight: bold;
+            font-size: 12px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .mini-song-info .song-artist {
+            font-size: 10px;
+            opacity: 0.8;
+        }
+
+        .mini-song-info .song-title,
+        .mini-song-info .song-artist {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: block; /* tambahkan ini jika perlu */
+        }
+
+        /* Kontainer kontrol pemutaran */
+        .mini-controls {
+            display: none;
+            align-items: center;
+        }
+
+        .mini-player.expanded .mini-controls {
+            display: flex;
+        }
+
+        /* Progress bar */
+        .mini-playbar {
+            width: 100px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+            margin: 0 10px;
+            overflow: hidden;
+            cursor: pointer;
+            position: relative;
+
+        }
+
+        .mini-progress-bar {
+            height: 100%;
+            background: #ffffff;
+            width: 0%;
+        }
+
+        /* Tombol kontrol */
+        .mini-play-button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 12px;
+            cursor: pointer;
+            padding: 5px;
+            margin: 0 5px;
+        }
+
+        /* Waktu */
+        .mini-time {
+            font-size: 10px;
+            width: 40px;
+            text-align: center;
+        }
+
+        .player-extra-content {
+            position: fixed;
+            width: 300px;
+            right: 20px;
+            display: none; /* default-nya tersembunyi */
+            background:rgb(0, 33, 245, 0.8);
+            border-radius: 30px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+            z-index: 999; /* sedikit di bawah mini player */
+            cursor: pointer;
+        }
+
+        /* Saat mini player di-expand, tampilkan kontainer tambahan */
+        .mini-player.expanded + .player-extra-content {
+            display: block;
+        }
+
+        .extra-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: white;
+            padding: 2px;
+        }
+
+        .extra-list {
+            display: none; /* Defaultnya sembunyi */
+            margin-bottom: 10px;
+            height: 82vh;
+            overflow-y: scroll;
+        }
+        
+        .extra-list::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, Opera */
+        }
+
+        .extra-list div {
+            padding: 4px 0;
+        }
+
+        .extra-list div:last-child {
+            border-bottom: none;
+        }
+
+        .song-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+            /* border-bottom: 1px solid #ddd; */
+            cursor: pointer;
+            /* border-radius: 8px; */
+            /* margin-bottom: 10px; */
+        }
+
+        .song-item:hover {
+            background-color: rgb(255, 255, 255, 0.2);
+        }
+
+        .song-play-button {
+            font-size: 18px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        .song-info {
+            flex-grow: 1;
+            text-align: left;
+            margin-left: 10px;
+            max-width: 160px; /* Atur sesuai kebutuhan */
+            overflow: hidden;
+        }
+
+        .song-title,
+        .song-artist {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: #ffffff;
+        }
+
+        .song-title {
+            font-weight: bold;
+            font-size: 13px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Tambahkan di stylesheet Anda */
+        .song-item.active .song-title {
+            color: #3af24b		 !important; /* Warna hijau Spotify */
+            text-shadow: 0 0 5px rgba(46, 204, 113, 0.5);
+        }
+
+        .song-artist {
+            font-size: 10px;
+            color: #ffffff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .album-cover-mini {
+            width: 40px;
+            height: 40px;
+            object-fit: cover;
+            border-radius: 6px;
+            margin-left: 10px;
+            margin-right: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar Horizontal -->
+    <nav class="navbar">
+        <img src="logo/INTOS.png" alt="logo" style="width: 60px; border-radius: 50px;">
+        <a href="#home" class="nav-link active">Home</a>
+        <a href="#member" class="nav-link">Member</a>
+        <a href="#album" class="nav-link">Album</a>
+        <span class="nav-indicator"></span>
+    </nav>
+
+    
+    <!-- Konten Utama -->
+    <div class="main-content">
+        <!-- Section Home -->
+        <section id="home" class="section active">
+            <div class="cards">
+                <img class="card" id="card1">
+                <img class="card middle" id="card2">
+                <img class="card" id="card3">
+            </div>
+            <h1>ASTARA VISTA</h1>
+            <p class="desc">
+                lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum<br>
+                lorep ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum
+            </p>
+            <button class="button-to-album">Start Journey</button>
+        </section>
+        
+        <!-- Section Member -->
+        <section id="member" class="section">
+                <!-- Navbar Filter Division -->
+                <div class="division-filter">
+                    <button class="filter-btn active" data-division="all">All</button>
+                    <button class="filter-btn" data-division="MPS">MPS</button>
+                    <button class="filter-btn" data-division="INTOS">Inti OSIS</button>
+                    <button class="filter-btn" data-division="Art & Sport">Art & Sport</button>
+                    <button class="filter-btn" data-division="Social">Social</button>
+                    <button class="filter-btn" data-division="Language">Language</button>
+                    <button class="filter-btn" data-division="Research & Development">Research & Development</button>
+                    <!-- Tambahkan division lain sesuai kebutuhan -->
+                </div>
+                
+                <div class="member-list" id="memberList">
+                    <!-- Daftar member akan di-generate oleh JavaScript -->
+                </div>  
+        </section>
+        
+        <!-- Halaman Detail Member -->
+        <div id="memberPage" class="member-page">
+            <div class="member-left">
+                <div class="background-text-0" id="background-text-0">OSIS</div>
+                <div class="background-text" id="background-text">OSIS</div>
+                <img id="background-image" alt="Gambar OSIS" class="background-image">
+                <button class="button back-button">Back to Members</button>
+                <div class="member-content">
+                    <p style="opacity: 0.7;" id="member-division">RESEARCH & DEVELOPMENT</p>
+                    <div class="character-name" id="member-name">RAFIF ABHYASAKHI PRADENANDANA</div>
+                </div>
+            </div>
+            <div class="member-right">
+                <div class="top-right">
+                    <div class="music-header">
+                        <div class="music-info">
+                            <p style="font-size: 10px; margin-bottom: 0;">Fav Music</p>
+                            <p style="font-size: 17px; margin-top: 2px; margin-bottom: 2px;" id="fav-artist">-Ardhito Pramono-</p>
+                            <p style="font-size: 17px; margin-top: 2px; margin-bottom: 2px;" id="fav-song">Here We Go Again</p>
+                            <div class="playbar-container" id="playbarContainer">
+                                <div class="playbar" id="playbar">
+                                    <div class="progress" id="progress">
+                                        <div class="progress-handle"></div>
+                                    </div>
+                                </div>
+                                <div class="time-info">
+                                    <span id="currentTime">0:00</span>
+                                    <span id="duration">0:00</span>
+                                </div>
+                            </div>
+                            <button class="play-button" onclick="togglePlay(currentDetailMemberId)">PLAY</button>
+                            <audio id="audioPlayer" src="lagu/herewegoagain.mp3"></audio>
+                        </div>
+                        <img class="album-cover" id="album-cover" alt="here we go again">
+                    </div>
+                    <div class="divider"></div>
+                    <div class="laptop">
+                        <img class="foto" id="member-photo">
+                        <div class="laptop-info">
+                            <p style="font-size: 17px; font-weight: bold;" id="laptop-brand"></p>
+                            <p style="font-size: 13px;" id="member-quote"></p>
+                        </div>            
+                    </div>
+                </div>
+                <div class="bottom-right">
+                    <div>
+                        <p>Social Media</p>
+                        <a id="instagram-link" class="panah" target="_blank">
+                            <img src="icon/panah.png" alt="panah">
+                        </a>
+                    </div>
+                </div>                
+            </div>
+        </div>
+        
+        <!-- Section Album -->
+        <section id="album" class="section">
+            <div class="container">
+              <div class="box" id="mediaBox"></div>
+            </div>
+        </section>
+
+        <div id="myModal" class="modal">
+            <div class="modal-background">
+              <div class="modal-content">
+                <!-- Gambar/video akan dimasukkan di sini -->
+              </div>
+            </div>
+        </div>
+
+        <div class="mini-player-container">  <!-- Kontainer baru yang mengikuti -->
+            <div id="miniPlayer" class="mini-player">
+                <div id="miniSongInfo" class="mini-song-info">
+                    <span id="miniSongTitle" class="song-title">No song playing</span>
+                    <span id="miniSongArtist" class="song-artist">Select a song</span>
+                </div>
+                <div class="mini-controls">
+                    <button id="miniPlayButton" class="mini-play-button">▶</button>
+                    <div class="mini-playbar" id="miniPlaybarContainer">
+                        <div id="miniProgressBar" class="mini-progress-bar"></div>
+                    </div>
+                    <span id="miniTime" class="mini-time">0:00</span>
+                </div>
+                <span id="miniIcon" class="mini-icon">
+                    <img src="icon/music.png" alt="music icon">
+                </span>
+            </div>
+
+            <div class="player-extra-content" id="playerExtraContent">
+                <div class="extra-header" id="extraToggle">
+                    ▼
+                </div>
+                <div class="extra-list" id="extraList">
+                    <!-- Isi lagu akan ditambahkan via JavaScript -->
+                </div>
+            </div>            
+        </div>
+
+    </div>
+    
+    <script>
+            function getRandomNumber(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        const totalImages = 106;
+        const usedNumbers = new Set();
+
+        function getUniqueRandom() {
+            let num;
+            do {
+                num = getRandomNumber(1, totalImages);
+            } while (usedNumbers.has(num));
+            usedNumbers.add(num);
+            return num;
+        }
+
+        // Ambil elemen img yang sudah ada
+        const card1 = document.getElementById('card1');
+        const card2 = document.getElementById('card2');
+        const card3 = document.getElementById('card3');
+
+        // Ganti src-nya dengan angka acak
+        card1.src = `foto/foto (${getUniqueRandom()}).jpg`;
+        card2.src = `foto/foto (${getUniqueRandom()}).jpg`;
+        card3.src = `foto/foto (${getUniqueRandom()}).jpg`;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const totalPhotos = 106;  // jumlah foto
+            const totalVideos = 49;   // jumlah video
+            const columns = 3;
+            const mediaBox = document.getElementById('mediaBox');
+            const modal = document.getElementById('myModal');
+            const modalBackground = document.querySelector('.modal-background');
+            const modalContent = document.querySelector('.modal-content');
+
+            // Buat kolom kosong
+            const columnElements = [];
+            for (let i = 0; i < columns; i++) {
+                const col = document.createElement('div');
+                col.classList.add('column');
+                columnElements.push(col);
+                mediaBox.appendChild(col);
+            }
+
+            // Gabungkan foto dan video ke satu array
+            const mediaItems = [];
+
+            for (let i = 1; i <= totalPhotos; i++) {
+                mediaItems.push({
+                    type: 'img',
+                    src: `foto/foto (${i}).jpg`,
+                    alt: `Foto ${i}`
+                });
+            }
+
+            for (let i = 1; i <= totalVideos; i++) {
+                mediaItems.push({
+                    type: 'video',
+                    src: `foto/foto (${i}).mov`
+                });
+            }
+
+            // Fungsi untuk mengacak array (Fisher–Yates shuffle)
+            function shuffle(array) {
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]];
+                }
+            }
+
+            shuffle(mediaItems);
+
+            // Tempel ke kolom
+            mediaItems.forEach((item, index) => {
+                const colIndex = index % columns;
+
+                if (item.type === 'img') {
+                    const img = document.createElement('img');
+                    img.src = item.src;
+                    img.alt = item.alt;
+                    img.addEventListener('click', function () {
+                        modal.style.display = 'flex';
+                        modalContent.innerHTML = `<img src="${img.src}" alt="Zoomed Image">`;
+                    });
+                    columnElements[colIndex].appendChild(img);
+                } else if (item.type === 'video') {
+                    const vid = document.createElement('video');
+                    vid.src = item.src;
+                    vid.muted = true;
+                    vid.loop = true;
+                    vid.playsinline = true;
+                    vid.setAttribute('autoplay', ''); // biar tetap auto-play di galeri
+                    vid.addEventListener('click', function () {
+                        modal.style.display = 'flex';
+                        modalContent.innerHTML = `<video src="${vid.src}" controls autoplay></video>`;
+                    });
+                    columnElements[colIndex].appendChild(vid);
+                }
+            });
+
+            // Tutup modal saat klik background
+            modalBackground.addEventListener('click', function () {
+                modal.style.display = 'none';
+                modalContent.innerHTML = '';
+            });
+
+            // Mencegah klik dalam konten ikut menutup modal
+            modalContent.addEventListener('click', function (e) {
+                e.stopPropagation();
+            });
+
+            // --- AUTOPLAY/Pause video saat masuk/keluar layar ---
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.play();
+                    } else {
+                        entry.target.pause();
+                    }
+                });
+            }, {
+                threshold: 0.2
+            });
+
+            document.querySelectorAll('#album video').forEach(video => {
+                video.muted = true;
+                video.loop = true;
+                observer.observe(video);
+            });
+        });
+
+
+        // Fungsi untuk inisialisasi filter
+        function initDivisionFilter() {
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Update active state
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Filter member list
+                    const division = this.getAttribute('data-division');
+                    generateMemberList(division);
+                });
+            });
+        }
+
+       // Data Member
+        const members = [
+            {
+                id: 1,
+                name: "RAFIF ABHYASAKHI PRADENANDANA",
+                nickname: "Rafif",
+                division: "Research & Development",
+                div: "Research & Development",
+                favArtist: "Ardhito Pramono",
+                favSong: "Here We Go Again/Fanboi",
+                laptopBrand: "Thinkpad",
+                quote: "Gitar ku tambalan, Laptop ku thinkpad. Hai Nona Ambalan, can i get your patpat?",
+                Instagram: "abhyasakhi"
+            },
+            {
+                id: 2,
+                name: "MUHAMMAD PARSA NIZAR WIJAYA",
+                nickname: "Parsa",
+                division: "Research & Development",
+                div: "Research & Development",
+                favArtist: "Regina Song",
+                favSong: "the cutest pair",
+                laptopBrand: "WO O O OW",
+                quote: "Datang dan pergi, pergi dan datang. Hadir dan hilang, hilang dan hadir lagi. Begitulah hidup ini, ada yang harus pergi agar ada yang datang temani. Bagai bulan dan mentari.",
+                Instagram: "parsaaanw"
+            },
+            {
+                id: 3,
+                name: "Faris Abdul Aziz",
+                nickname: "Faris",
+                division: "INTOS",
+                div: "KETUA OSIS",
+                favArtist: "Keshi",
+                favSong: "2 Soon",
+                laptopBrand: "HYPE",
+                quote: "Untuk Astara Vista, terimakasih karena udah jadi bagian indah di chapter SMA kami semua. Semoga sukses semuanya👊🏻",
+	    Instagram: "bedullaziz"
+            },
+
+{
+                id: 4,
+                name: "Saffiya Hisaan Irhamma Pranowo",
+                nickname: "Saffiya",
+                division: "Language",
+                div: "Language Coordinator",
+                favArtist: "The Smiths",
+                favSong: "Back to the Old House",
+                laptopBrand: "Keras",
+                quote: "yolo",
+	    Instagram: "baxickle"
+            },
+            {
+                id: 5,
+                name: "Brilliant Edgina Hiroshi",
+                nickname: "Gina",
+                division: "Art & Sport",
+                div: "Art & Sport Coordinator",
+                favArtist: "Ardhito Pramono",
+                favSong: "superstar",
+                laptopBrand: "unpredictable",
+                quote: "Terimakaasihhh banyak astara vista khususnya senooOOooooO buat semua perjuangan, tawa, dan stress bareng. Doa terbaik buat kalian semua!",
+	    Instagram: "edgina_hiroshi"
+            },
+{
+                id: 6,
+                name: "Muhammad Wira Dwi Pangga",
+                nickname: "Wira",
+                division: "Art & Sport",
+                div: "Art & Sport Coordinator",
+                favArtist: "Hindia",
+                favSong: "Evaluasi",
+                laptopBrand: "Asteria",
+                quote: "Duduk sama rata, berdiri tanpa raja. Walau jalan kita sudah tak sama. Memori kita tetap selamanya",
+	    Instagram: "Xwird_"
+            },
+{
+                id: 7,
+                name: "Mochammad Asyam Hadika Santoso",
+                nickname: "Asyam",
+                division: "Social",
+                div: "Social Coordinator",
+                favArtist: "Coldplay",
+                favSong: "Fix You",
+                laptopBrand: "sibuk",
+                quote: "Semakin melenting kedepannya",
+	    Instagram: "hadikasantoso"
+            },
+
+{
+                id: 8,
+                name: "Ammar Adyan Syarif",
+                nickname: "Ammar",
+                division: "MPS",
+                div: "KETUA MPS",
+                favArtist: "Ariana Grande",
+                favSong: "7 rings",
+                laptopBrand: "mantap",
+                quote: "semangat terus ges",
+	    Instagram: "syrf_ammmar"
+            },
+            {
+                id: 9,
+                name: "Muhammad Darrel Al Ghiffari",
+                nickname: "Darrel",
+                division: "Social",
+                div: "Social",
+                favArtist: "Beabadoobee",
+                favSong: "glue song",
+                laptopBrand: "capekkkk",
+                quote: "jangan ubah nasi yang sudah menjadi bubur",
+	    Instagram: "_ddrrel31_"
+            },
+
+
+{
+                id: 10,
+                name: "Azila Islami Zulwi",
+                nickname: "Azila",
+                division: "MPS",
+                div: "MPS",
+                favArtist: "the goo goo dolls",
+                favSong: "iris",
+                laptopBrand: "memories",
+                quote: "bergema until the end",
+	    Instagram: "azllzlaa"
+            },
+
+{
+                id: 11,
+                name: "Muhammad Hanifan Basir",
+                nickname: "Hanifan",
+                division: "Art & Sport",
+                div: "Art & Sport",
+                favArtist: "galdive",
+                favSong: "Teach me how to love",
+                laptopBrand: "gacor",
+                quote: "Happy to know all of u guys",
+	    Instagram: "Hanipan_b"
+            },
+
+{
+                id: 12,
+                name: "Aulia Yasmine Faradilla",
+                nickname: "Yasmine",
+                division: "Art & Sport",
+                div: "Art & Sport",
+                favArtist: "Avenged Sevenfold",
+                favSong: "Shepherd of Fire",
+                laptopBrand: "Keren",
+                quote: "With one spirit make us united",
+	    Instagram: "_yasmine_fa"
+            },
+
+{
+                id: 13,
+                name: "Nadhirah Aulia Putri Sinambela",
+                nickname: "Nadhirah",
+                division: "Research & Development",
+                div: "Research & Development",
+                favArtist: "Taylor Swift",
+                favSong: "Daylight",
+                laptopBrand: "KECE",
+                quote: "Terima kasih untuk pelajaran berharganya, Astara Vista",
+	    Instagram: "ndhrahaul_"
+            },
+
+{
+                id: 14,
+                name: "Muhammad Radithya Putra",
+                nickname: "Robert",
+                division: "Research & Development",
+                div: "Research & Development",
+                favArtist: "Sickick",
+                favSong: "Mind Games",
+                laptopBrand: "BERKELAS",
+                quote: "selalu merindukan kebersamaan dalam ruang broadcast",
+	    Instagram: "radithyaputra16"
+            },
+
+{
+                id: 15,
+                name: "Elvetta Salwaa",
+                nickname: "Vetta",
+                division: "INTOS",
+                div: "INTOS",
+                favArtist: "Sheila on 7",
+                favSong: "Kita",
+                laptopBrand: "keren!",
+                quote: "Sukses selalu OSIS MPS MAN IC Batam!",
+	    Instagram: "vettaslwaa"
+            },
+            {
+                id: 16,
+                name: "Ahmad Alwan",
+                nickname: "Alwan",
+                division: "Language",
+                div: "Language Coordinator",
+                favArtist: "Tenxi, Jemsii, Naykilla",
+                favSong: "Garam & Madu (Sakit Dadaku)",
+                laptopBrand: "KELUARGA",
+                quote: "Sayang Durland<3 Happy Family<3",
+	    Instagram: "alwan.hermawn"
+            },
+
+{
+                id: 17,
+                name: "Sabrina Nadia Zulviati",
+                nickname: "Sabrina",
+                division: "Language",
+                div: "Language",
+                favArtist: "dept",
+                favSong: "Strawberry champagne",
+                laptopBrand: "SERU",
+                quote: "semoga osis seru terus",
+	    Instagram: "Nadyazlvii"
+            },
+            {
+                id: 18,
+                name: "Komang Salbiya Andana",
+                nickname: "Komang",
+                division: "INTOS",
+                div: "INTOS",
+                favArtist: "Mitski",
+                favSong: "My Love Mine All Mine",
+                laptopBrand: "Challenging",
+                quote: "Terima kasih untuk satu tahun yang seru!! All the best untuk semua osis mps Astara Vista!!",
+	    Instagram: "slbydana"
+            },
+
+{
+                id: 19,
+                name: "Senna Farras Hazim",
+                nickname: "Senna",
+                division: "Language",
+                div: "Language",
+                favArtist: "Hindia",
+                favSong: "everything u are",
+                laptopBrand: "Cherish",
+                quote: "I’am just here so I don’t get fined",
+	    Instagram: "sayennotfound"
+            },
+
+{
+                id: 20,
+                name: "Firyal Hasna",
+                nickname: "Firyal",
+                division: "Research & Development",
+                div: "Research & Development",
+                favArtist: "Arctic Monkeys",
+                favSong: "R U Mine?",
+                laptopBrand: "Camaraderie!",
+                quote: "close this chapter, passing the torch with pride and hope",
+	    Instagram: "fh_firyal_"
+            },
+            {
+                id: 21,
+                name: "Zizou Athoillah Putra Gunawan",
+                nickname: "Zizou",
+                division: "Language",
+                div: "Language",
+                favArtist: "Ariana Grande",
+                favSong: "supernatural",
+                laptopBrand: "Kompeten",
+                quote: "Semoga Allah memudahkan jalan kita masing-masing",
+	    Instagram: "zapgun_"
+            },
+
+{
+                id: 22,
+                name: "Khaleesa Nayla",
+                nickname: "Khaleesa",
+                division: "Language",
+                div: "Language",
+                favArtist: "sleeping at last",
+                favSong: "Saturn",
+                laptopBrand: "opportunity",
+                quote: "who you were is so happy about who you are",
+	    Instagram: "lisanaayla"
+            },
+            {
+                id: 23,
+                name: "Baiq Aina Salsabila Ambarwati",
+                nickname: "Baiq",
+                division: "Art & Sport",
+                div: "Art & Sport",
+                favArtist: "Cigarettes After Sex",
+                favSong: "Tejano Blue",
+                laptopBrand: "seru",
+                quote: "Terima kasih untuk setahun luar biasanya di OSIS untuk segala event, waktu, dan pengalaman berharga. We did a great job! See you guys on top",
+	    Instagram: "salsabillaacha_"
+            },
+            {
+                id: 24,
+                name: "Siti Sa'diyah",
+                nickname: "Sa'diyah",
+                division: "MPS",
+                div: "WAKIL KETUA MPS",
+                favArtist: "Henry Moodie",
+                favSong: "Drunk text",
+                laptopBrand: "Rock",
+                quote: "To the late nights, bold ideas, and shared dreams. Thank you, Astara Vista, for making this chapter unforgottable❤️‍🩹",
+	    Instagram: "hzl.odt"
+            },
+
+{
+                id: 25,
+                name: "Fachri Muhamad Awaludin",
+                nickname: "Fachri",
+                division: "Art & Sport",
+                div: "Art & Sport",
+                favArtist: "Arctic Monkeys",
+                favSong: "Secret Door",
+                laptopBrand: "Tak Terlupakan",
+                quote: "Semoga seluruh rekan-rekan sukses di dunia dan akhirat",
+	    Instagram: "fachri_awaludin"
+            },
+
+{
+                id: 26,
+                name: "Safa Azzahra",
+                nickname: "Safa",
+                division: "MPS",
+                div: "MPS",
+                favArtist: "Juliet Ivy",
+                favSong: "we're all eating each other",
+                laptopBrand: "Berproses",
+                quote: "Ingatlah bersama siapa engkau terjatuh sebab merekalah yang membantu prosesmu untuk bangun",
+	    Instagram: "rzqisdgt"
+            },
+
+{
+                id: 27,
+                name: "Zehra Alfaya",
+                nickname: "Zehra",
+                division: "INTOS",
+                div: "WAKIL KETUA OSIS",
+                favArtist: "Frank Sinatra",
+                favSong: "Cheek to Cheek",
+                laptopBrand: "Außergewöhnlich",
+                quote: "Satu tahun bersama Astaravista, saya belajar banyak tentang kerja sama, tanggung jawab, dan dedikasi. Terima kasih untuk pengalaman luar biasa dan kenangan yang berharga.",
+	    Instagram: "zehrafaya"
+            },
+
+{
+                id: 28,
+                name: "Faizah Zahra",
+                nickname: "Faizah",
+                division: "Language",
+                div: "Language",
+                favArtist: "Chase Atlantic",
+                favSong: "HEAVEN AND BACK",
+                laptopBrand: "GANASH",
+                quote: "Berakhir jabatannya, tapi nggak berakhir ceritanya. Cheers!!",
+	    Instagram: "faizahhhra"
+            },
+
+{
+                id: 29,
+                name: "Maila Suha Atikah",
+                nickname: "Maila",
+                division: "Art & Sport",
+                div: "Art & Sport",
+                favArtist: "sarah kang",
+                favSong: "once in a moon",
+                laptopBrand: "keren",
+                quote: "Semoga kedepannya osis mps icb bisa terus berkembang lebih baik lagi, semangat!",
+	    Instagram: "mailasuha"
+            },
+{
+                id: 30,
+                name: "Afrina Shalta Putri",
+                nickname: "Shalta",
+                division: "Language",
+                div: "Language",
+                favArtist: "JENNIE",
+                favSong: "twin",
+                laptopBrand: "BERKESAN",
+                quote: "Thanks, Astara Vista. . you made this journey unforgottable, no matter where life takes us. We led, served, learned and it was worth every second.",
+	    Instagram: "sherenataa_"
+            },
+
+{
+                id: 31,
+                name: "Muhammad Rifqi Athaullah",
+                nickname: "Rifqi",
+                division: "MPS",
+                div: "MPS",
+                favArtist: "Tony Lanez",
+                favSong: "The Color Violet",
+                laptopBrand: "Komitmen",
+                quote: "Guided by dreams",
+	    Instagram: "ripskuyyy"
+            },
+
+{
+                id: 32,
+                name: "Muhammad Nabil Rahmansyah",
+                nickname: "Rahmansyah",
+                division: "MPS",
+                div: "MPS",
+                favArtist: "Kendrick lamar & SZA",
+                favSong: "Luther",
+                laptopBrand: "Dermawan",
+                quote: "Jangan pernah ragu dan takut untuk mencoba hal baru",
+	    Instagram: "maarrcelline"
+            },
+{
+                id: 33,
+                name: "Aristawidya Annisa Berliana",
+                nickname: "Arista",
+                division: "Research & Development",
+                div: "Research & Development Coordinator",
+                favArtist: "Guns N' Roses",
+                favSong: "Sweet Child O' Mine",
+                laptopBrand: "Life-changing",
+                quote: "We might not have all the answers, but we have the courage to ask the right questions and the heart to keep going.",
+	    Instagram: "arista_berliana"
+            },
+
+{
+                id: 34,
+                name: "Khansa Yumna Tsabita",
+                nickname: "Khansa",
+                division: "Research & Development",
+                div: "Research & Development",
+                favArtist: "Arash Buana, Anya Taroreh",
+                favSong: "We'll Be Okay, For Today",
+                laptopBrand: "Kebersamaan",
+                quote: "Life is a collection of moments, keep it as a memories and it will last forever",
+	    Instagram: "khansytsabita"
+            },
+
+{
+                id: 35,
+                name: "Haikal Nukriana Putra",
+                nickname: "Haikal",
+                division: "Research & Development",
+                div: "Research & Development",
+                favArtist: "Tame Impala",
+                favSong: "New Person, Same Old Mistakes",
+                laptopBrand: "Menakjubkan",
+                quote: "kalo kalah jangan nangis",
+	    Instagram: "haikal.nukriana"
+            },
+{
+                id: 36,
+                name: "Katara Alya Ghaida",
+                nickname: "Katara",
+                division: "Research & Development",
+                div: "Research & Development",
+                favArtist: "Big Time Rush",
+                favSong: "Crazy For U",
+                laptopBrand: "lit 🔥 ",
+                quote: "stressss banget sih memang, but doing it all with you guys was worth it! thank youuu for all the fun <333",
+	    Instagram: "ktraa_jpg"
+            },
+
+{
+                id: 37,
+                name: "Zevina Zahirah Novi Syahrini",
+                nickname: "Zevina",
+                division: "INTOS",
+                div: "INTOS",
+                favArtist: "Anri",
+                favSong: "Last Summer Whisper",
+                laptopBrand: "Hebat ⭐",
+                quote: "Tiada kata yang lebih indah selain terima kasih untuk 1 tahun menjadi bagian dari kalian. Semangat semuanya! 💐",
+	    Instagram: "mhstr.d_"
+            },
+
+{
+                id: 38,
+                name: "Buwono Rifai",
+                nickname: "Buwono",
+                division: "Research & Development",
+                div: "Research & Development",
+                favArtist: "NIKI",
+                favSong: "you'll be in my heart",
+                laptopBrand: "MAKASIH",
+                quote: "banyak pengalaman dan kemampuan yang datang selama satu tahun di kabinet ini, dan ini adalah ilmu yang bikin perubahan di hidup orang kecil dari jakarta ini. Jadi makasih banyak untuk setahun ini Astara Vista.",
+	    Instagram: "norii__63"
+            }, 
+            {
+                id: 39,
+                name: "Ahmad Farhan Saputra",
+                nickname: "Farhan",
+                division: "Social",
+                div: "Social",
+                favArtist: "One Republic",
+                favSong: "I Ain't Worried",
+                laptopBrand: "Prioritas",
+                quote: "Kerja kerja kerja !!!!",
+	    Instagram: "ahmadfarhana"
+            },
+            {
+            id: 40,
+                name: "Sultan Muhammad Alzam",
+                nickname: "Sultan",
+                division: "Language",
+                div: "Language",
+                favArtist: "Raim Laode",
+                favSong: "Lesung Pipi",
+                laptopBrand: "Dope",
+                quote: "Tak mudah menjalani semua peran. Namun jika kuhadapi setiap tantangan bersama kalian, maka akan berubah jadi pengalaman berharga yang tak akan pernah terlupakan selamanya.",
+                Instagram: "natlusaja_"
+            },
+            {
+                id: 41,
+                name: "Zulfatusy Syariefa Tarigan",
+                nickname: "Tusy",
+                division: "Research & Development",
+                div: "Research & Development",
+                favArtist: "SEVENTEEN",
+                favSong: "To You",
+                laptopBrand: "Kece",
+                quote: "Menjadi bagian OSIS memberikan banyak pengalaman berharga. Terima kasih atas kerja samanya. Sukses terus untuk kita semua ^^",
+	            Instagram: "zlftsy.94"
+            },
+
+{
+                id: 42,
+                name: "Sheryn Tiara Putri",
+                nickname: "Sheryn",
+                division: "Social",
+                div: "Social",
+                favArtist: "LANY",
+                favSong: "'Cause you have to",
+                laptopBrand: "journey",
+                quote: "Cause i'll remember this all too well",
+	    Instagram: "shryntiara"
+            },
+
+{
+                id: 43,
+                name: "Muthia Halizah",
+                nickname: "Muthia",
+                division: "Social",
+                div: "Social",
+                favArtist: "Malcolm Todd",
+                favSong: "Chest Pain (I Love)",
+                laptopBrand: "Tinggi",
+                quote: "pamit bukan berarti berakhir",
+	    Instagram: "mutihaahz"
+            },
+
+{
+                id: 44,
+                name: "Wanfina Raissa",
+                nickname: "Wanfina",
+                division: "Art & Sport",
+                div: "Art & Sport",
+                favArtist: "Nidji",
+                favSong: "Rahasia Hati",
+                laptopBrand: "selamanya.",
+                quote: "Once together, forever remembered.",
+	    Instagram: "wnfnaar_"
+            },
+
+{
+                id: 45,
+                name: "Calya Pradnya Paramitha",
+                nickname: "Calya",
+                division: "MPS",
+                div: "MPS",
+                favArtist: "beabadoobee",
+                favSong: "the perfect pair",
+                laptopBrand: "inspriring!",
+                quote: "Being part of Astara Vista is one of the thing i'll never forget. Terimakasih banyak setahun penuhnya Astara Vista!",
+	    Instagram: "calyaylac"
+            },
+
+{
+                id: 46,
+                name: "Abdurahman Yusuf",
+                nickname: "Abdu",
+                division: "MPS",
+                div: "MPS",
+                favArtist: "Rex Orange County",
+                favSong: "Television / So Far So Good",
+                laptopBrand: "Marvelous!",
+                quote: "Terima kasih untuk abang-abang, kakak-kakak dan teman-teman Astara Vista, semoga semua yang sudah kita lalui bisa menjadi pelajaran dan keanngan yang berharga untuk kita.",
+	    Instagram: "abdurhmn_y"
+            },
+
+        ];
+
+        // Global audio player variables
+        const audio = document.getElementById("audioPlayer");
+        const playButton = document.querySelector(".play-button");
+        const progress = document.getElementById("progress");
+        const playbar = document.getElementById("playbar");
+        const playbarContainer = document.getElementById("playbarContainer");
+        const currentTimeDisplay = document.getElementById("currentTime");
+        const durationDisplay = document.getElementById("duration");
+
+        let currentPlayingMemberId = null;
+        let currentDetailMemberId = null;
+        let currentMemberId = null;
+        let progressAnimationId = null;
+
+
+        function showMemberDetail(memberId) {
+            currentDetailMemberId = memberId;
+
+            const member = members.find(m => m.id === memberId);
+            if (!member) return;
+
+            const topRight = document.querySelector('.top-right');
+
+            // Reset dulu class tambahan
+            topRight.className = 'top-right';
+
+            // Tambah class berdasarkan divisi
+            const divClass = member.division.toLowerCase().replace(/\s+/g, '-'); // Misalnya: "Research & Development" → "research-&-development"
+            
+            if (divClass.includes('research')) {
+                topRight.classList.add('research');
+            } else if (divClass.includes('social')) {
+                topRight.classList.add('social');
+            } else if (divClass.includes('language')) {
+                topRight.classList.add('language')
+            } else if (divClass.includes('mps')) {
+                topRight.classList.add('mps')
+            } else if (divClass.includes('intos')) {
+                topRight.classList.add('intos')
+            } else if (divClass.includes('art')) {
+                topRight.classList.add('art')
+            }
+
+            // Isi data ke UI, tapi jangan sentuh audio.src
+            document.getElementById('background-image').src = `logo/${member.division}.png`;
+            document.getElementById('member-division').textContent = member.div.toUpperCase();
+            document.getElementById('member-name').textContent = member.name.toUpperCase();
+            document.getElementById('fav-artist').textContent = `- ${member.favArtist} -`;
+            document.getElementById('fav-song').textContent = member.favSong;
+            document.getElementById('album-cover').src = `album cover/${member.favSong.replace(/[?\/]/g, '_')}.jpg`;
+            document.getElementById('member-photo').src = `pp/${member.nickname}.jpg`;
+            document.getElementById('laptop-brand').textContent = member.laptopBrand;
+            document.getElementById('member-quote').textContent = member.quote;
+            document.getElementById('instagram-link').href = `https://instagram.com/${member.Instagram}`;
+
+
+            // Jangan ubah audio.src atau pause audio
+            playButton.textContent = (memberId === currentPlayingMemberId && !audio.paused) ? "PAUSE" : "PLAY";
+            const progressPercent = (audio.currentTime / audio.duration) * 100;
+            progress.style.width = `${progressPercent}%`;
+            currentTimeDisplay.textContent = formatTime(audio.currentTime);
+            durationDisplay.textContent = formatTime(audio.duration);
+            
+            // Update background text
+            const backgroundText = member.division.toUpperCase() === "MPS" ? "MPS" : "OSIS";
+            document.getElementById("background-text").textContent = backgroundText;
+            document.getElementById("background-text-0").textContent = backgroundText;
+
+            // Tampilkan halaman detail
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.getElementById('memberPage').classList.add('active');
+            if (currentDetailMemberId !== currentPlayingMemberId) {
+                progress.style.width = "0%";
+                currentTimeDisplay.textContent = "0:00";
+                durationDisplay.textContent = "0:00";
+            }
+            if (progressAnimationId) {
+                cancelAnimationFrame(progressAnimationId);
+                progressAnimationId = null;
+            }
+        }
+
+        function generateMemberList(division = 'all') {
+            const memberList = document.getElementById('memberList');
+            memberList.innerHTML = '';
+            
+            const filteredMembers = division === 'all' 
+                ? members 
+                : members.filter(m => m.division === division);
+            
+            if (filteredMembers.length === 0) {
+                memberList.innerHTML = '<p class="no-member">No members in this division</p>';
+                return;
+            }
+            
+            filteredMembers.forEach(member => {
+                const memberCard = document.createElement('div');
+                memberCard.className = 'member-card';
+                memberCard.innerHTML = `
+                    <img class="member-photo" src="pp/${member.nickname}.jpg" alt="${member.name}">
+                    <div class="member-info">
+                        <div class="member-name">${member.nickname}</div>
+                        <div class="member-division">${member.div}</div>
+                    </div>
+                `;
+                memberCard.addEventListener('click', () => {
+                    showMemberDetail(member.id);
+                });
+                memberList.appendChild(memberCard);
+            });
+        }
+
+        // Navigasi menu utama
+        document.addEventListener('DOMContentLoaded', function() {
+            const navIndicator = document.querySelector('.nav-indicator');
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('.section');
+            const memberPage = document.getElementById('memberPage');
+            const backButton = document.querySelector('.back-button');
+            const startJourneyButton = document.querySelector('.button-to-album');
+
+            function moveIndicator(el) {
+                const rect = el.getBoundingClientRect();
+                const navbarRect = el.parentElement.getBoundingClientRect();
+
+                navIndicator.style.left = (rect.left - navbarRect.left) + "px";
+                navIndicator.style.width = rect.width + "px";
+            }
+
+            const activeLink = document.querySelector('.nav-link.active');
+            if (activeLink) moveIndicator(activeLink);
+
+            startJourneyButton.addEventListener('click', function(e) {
+                e.preventDefault();
+
+                // Nonaktifkan semua nav link dan section
+                navLinks.forEach(l => l.classList.remove('active'));
+                sections.forEach(s => s.classList.remove('active'));
+
+                // Sembunyikan member page jika sedang terbuka
+                memberPage.classList.remove('active');
+
+                // Aktifkan section album
+                document.getElementById('album').classList.add('active');
+
+                // Aktifkan nav-link album jika ada
+                const albumNavLink = document.querySelector('.nav-link[href="#album"]');
+                if (albumNavLink) {
+                    albumNavLink.classList.add('active');
+                }
+
+                moveIndicator(albumNavLink);
+
+            });
+
+            // Generate daftar member awal
+            generateMemberList();
+            initDivisionFilter();
+
+
+            // Navigasi menu
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Hapus class active dari semua link dan section
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    sections.forEach(s => s.classList.remove('active'));
+                    
+                    // Sembunyikan halaman member
+                    memberPage.classList.remove('active');
+                    
+                    // Tambah class active ke link yang diklik
+                    this.classList.add('active');
+                    
+                    // Tampilkan section yang sesuai
+                    const target = this.getAttribute('href');
+                    document.querySelector(target).classList.add('active');
+
+                    moveIndicator(this);
+                });
+            });
+            
+            // Back button functionality
+            backButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                memberPage.classList.remove('active');
+                document.getElementById('member').classList.add('active');
+                document.querySelector('.nav-link[href="#member"]').classList.add('active');
+            });
+        });
+
+        // Format waktu menjadi menit:detik
+        function formatTime(seconds) {
+            if (isNaN(seconds)) return "0:00";
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+        }
+
+         // Update progress bar dan waktu
+         function updateProgress() {
+            // Hanya update kalau sedang buka member yang mutar lagunya
+            if (audio.paused || currentDetailMemberId !== currentPlayingMemberId) return;
+
+            const progressPercent = (audio.currentTime / audio.duration) * 100;
+            progress.style.width = `${progressPercent}%`;
+            currentTimeDisplay.textContent = formatTime(audio.currentTime);
+            durationDisplay.textContent = formatTime(audio.duration);
+
+            // Simpan ID animationFrame supaya bisa di-cancel
+            progressAnimationId = requestAnimationFrame(updateProgress);
+        }
+
+        function togglePlay(memberId) {
+            if (audio.paused || currentPlayingMemberId !== memberId) {
+                const member = members.find(m => m.id === memberId);
+                if (!member) return;
+
+                if (currentPlayingMemberId !== memberId) {
+                    const audioFileName = member.favSong.replace(/[?\/]/g, '_');
+                    audio.src = `lagu/${audioFileName}.mp3`;
+                    currentPlayingMemberId = memberId;
+
+                    audio.currentTime = 0;
+                }
+
+                audio.play().then(() => {
+                    // Hanya update tombol detail kalau member ini sedang dibuka
+                    if (currentDetailMemberId === memberId) {
+                        playButton.textContent = "PAUSE";
+                    }
+                    miniPlayButton.textContent = "❚❚";
+                    updateProgress();
+                }).catch(err => console.error("Playback failed:", err));
+            } else {
+                audio.pause();
+
+                // Hanya update tombol detail kalau member ini sedang dibuka
+                if (currentDetailMemberId === memberId) {
+                    playButton.textContent = "PLAY";
+                }
+                miniPlayButton.textContent = "▶";
+            }
+        }
+
+        // Fungsi untuk menggeser playbar
+        function setProgress(e) {
+            const rect = playbar.getBoundingClientRect();
+            const clickX = e.clientX - rect.left;
+            const percentage = Math.min(Math.max(clickX / rect.width, 0), 1);
+            
+            // Set waktu pemutaran sesuai posisi klik
+            audio.currentTime = percentage * audio.duration;
+            
+            // Update tampilan
+            progress.style.width = `${percentage * 100}%`;
+            currentTimeDisplay.textContent = formatTime(audio.currentTime);
+            
+            // Jika sedang play, teruskan update
+            if (!audio.paused) {
+                updateProgress();
+            }
+        }
+
+        // Event listeners
+        audio.addEventListener('timeupdate', function() {
+            if (!audio.seeking && audio.duration && currentDetailMemberId === currentPlayingMemberId) {
+                const progressPercent = (audio.currentTime / audio.duration) * 100;
+                progress.style.width = `${progressPercent}%`;
+                currentTimeDisplay.textContent = formatTime(audio.currentTime);
+                durationDisplay.textContent = formatTime(audio.duration);
+            }
+        });
+        audio.addEventListener('loadedmetadata', function() {
+            if (currentDetailMemberId === currentPlayingMemberId) {
+                durationDisplay.textContent = formatTime(audio.duration);
+            }
+        });
+
+
+        audio.addEventListener('ended', function() {
+            playButton.textContent = "PLAY";
+            progress.style.width = "0%";
+            currentTimeDisplay.textContent = "0:00";
+        });
+
+        // Klik pada playbar untuk menggeser
+        playbarContainer.addEventListener('click', setProgress);
+
+        const miniPlayer = document.getElementById("miniPlayer");
+        const miniIcon = document.getElementById("miniIcon");
+        const miniSongInfo = document.getElementById("miniSongInfo");
+        const miniSongTitle = document.getElementById("miniSongTitle");
+        const miniSongArtist = document.getElementById("miniSongArtist");
+        const miniProgressBar = document.getElementById("miniProgressBar");
+        const miniPlayButton = document.getElementById("miniPlayButton");
+        const miniTime = document.getElementById("miniTime");
+        const miniPlaybarContainer = document.getElementById("miniPlaybarContainer");
+        const playerExtraContent = document.getElementById('playerExtraContent');
+
+        function setMiniProgress(e) {
+            const rect = miniPlaybarContainer.getBoundingClientRect();
+            const clickX = e.clientX - rect.left;
+            const width = rect.width;
+            const percentage = Math.min(Math.max(clickX / width, 0), 1);
+
+            if (!isNaN(audio.duration)) {
+                audio.currentTime = percentage * audio.duration;
+            }
+        }
+
+        miniPlaybarContainer.addEventListener("click", (e) => {
+            e.stopPropagation(); // Supaya gak trigger toggle expand
+            setMiniProgress(e);
+        });
+
+
+        let isDraggingVertically = false;
+        let offsetY = 0;
+        let wasDragging = false; // Flag untuk bedakan drag dan klik biasa
+
+
+        // Update event click untuk toggle expand
+        miniPlayer.addEventListener('click', function(e) {
+            if (!wasDragging && (e.target === miniPlayer || e.target === miniIcon)) {
+                miniPlayer.classList.toggle('expanded');
+
+                const isExpanded = miniPlayer.classList.contains('expanded');
+                if (isExpanded) {
+                    playerExtraContent.style.display = 'block';
+                    updateExtraContentPosition(); // langsung set posisinya
+                } else {
+                    playerExtraContent.style.display = 'none';
+                }
+            }
+        });
+
+        function updateExtraContentPosition() {
+            const spacing = 10;
+            const miniTop = miniPlayer.offsetTop;
+            const miniHeight = miniPlayer.offsetHeight;
+            playerExtraContent.style.top = (miniTop + miniHeight + spacing) + 'px';
+        }
+
+        // Mengatur tampilan lagu saat diputar
+        audio.addEventListener('play', () => {
+            const member = members.find(m => m.id === currentPlayingMemberId);
+            if (member) {
+                miniSongTitle.textContent = member.favSong || "Unknown song";
+                miniSongArtist.textContent = member.favArtist || "Unknown artist";
+            }
+            miniPlayButton.textContent = "❚❚"; // Simbol pause
+        });
+
+        // Tombol Play/Pause di mini player
+        miniPlayButton.addEventListener('click', (e) => {
+            e.stopPropagation(); // Mencegah event bubble ke miniPlayer
+            if (audio.paused) {
+                audio.play();
+                miniPlayButton.textContent = "❚❚";
+                if(currentDetailMemberId === currentPlayingMemberId){
+                playButton.textContent = "PAUSE";
+                }
+            } else {
+                audio.pause();
+                miniPlayButton.textContent = "▶";
+                if(currentDetailMemberId === currentPlayingMemberId){
+                playButton.textContent = "PLAY";
+                }
+            }
+        });
+
+        // Update progress bar dan waktu
+        audio.addEventListener('timeupdate', () => {
+            if (audio.duration) {
+                const percent = (audio.currentTime / audio.duration) * 100;
+                miniProgressBar.style.width = `${percent}%`;
+                miniTime.textContent = formatTime(audio.currentTime);
+            }
+        });
+
+        // Format waktu menjadi menit:detik
+        function formatTime(seconds) {
+            if (isNaN(seconds)) return "0:00";
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+        }
+
+        // Saat lagu selesai, reset kontrol
+        audio.addEventListener('ended', () => {
+            miniPlayButton.textContent = "▶";
+            miniProgressBar.style.width = "0%";
+            miniTime.textContent = "0:00";
+        });
+
+        const extraHeader = document.getElementById("extraToggle");
+        const extraList = document.getElementById("extraList");
+
+        extraHeader.addEventListener("click", () => {
+            // Toggle untuk tampilkan/menyembunyikan extra list
+            const isShown = extraList.style.display === "block";
+            extraList.style.display = isShown ? "none" : "block";
+            
+            // Ganti teks panah sesuai dengan status
+            extraHeader.textContent = isShown ? "▼" : "▲";
+
+            // Jika list ditampilkan, generate lagu-lagu dari member
+            if (!isShown) {
+                generateMemberSongs(); // Generate lagu saat expand
+            }
+        });
+
+        // Generate member songs
+        function generateMemberSongs() {
+            const extraList = document.getElementById("extraList");
+            extraList.innerHTML = ""; // Clear previous content
+
+            members.forEach(member => {
+            const div = document.createElement("div");
+            div.classList.add("song-item");
+
+            div.innerHTML = `
+                <button class="song-play-button" style="color: white; margin-left:20px;">▶</button>
+                <div class="song-info">
+                    <div class="song-title">${member.favSong}</div>
+                    <div class="song-artist">${member.favArtist}</div>
+                </div>
+                <img class="album-cover-mini" src="album cover/${member.favSong.replace(/[?\/]/g, '_')}.jpg" alt="${member.favSong} cover">
+            `;
+
+            const playButtonExtraList = div.querySelector(".song-play-button");
+            playButtonExtraList.addEventListener("click", (e) => {
+                e.stopPropagation();
+
+                if (currentPlayingMemberId === member.id) {
+                    togglePlay(member.id);
+                    return;
+                }
+
+                currentPlayingMemberId = member.id;
+                const audioFileName = member.favSong.replace(/[?\/]/g, '_');
+                audio.src = `lagu/${audioFileName}.mp3`;
+
+                miniSongTitle.textContent = member.favSong;
+                miniSongArtist.textContent = member.favArtist;
+
+                audio.play()
+                    .then(() => {
+                        miniPlayButton.textContent = "❚❚";
+                        playButtonExtraList.textContent = "❚❚";
+
+                        // Update tombol play di halaman detail
+                        if (currentDetailMemberId === member.id) {
+                            playButton.textContent = "PAUSE";
+                            progress.style.width = "0%";
+                            currentTimeDisplay.textContent = "0:00";
+                            durationDisplay.textContent = formatTime(audio.duration || 0);
+                            updateProgress(); // Pastikan progress jalan
+                        } else {
+                            // Kalau halaman detail buka member lain, reset dia
+                            playButton.textContent = "PLAY";
+                            progress.style.width = "0%";
+                            currentTimeDisplay.textContent = "0:00";
+                            durationDisplay.textContent = "0:00";
+                        }
+                    })
+                    .catch(err => console.error("Gagal memutar:", err));
+            });
+
+            // ✅ Tambahan: tetap aktif meski di-pause
+            if (currentPlayingMemberId === member.id) {
+                div.classList.add("active");
+                playButtonExtraList.textContent = audio.paused ? "▶" : "❚❚";
+            }
+
+            extraList.appendChild(div);
+        });
+        }
+
+        // Hanya tambahkan baris ini di dalam event play
+        audio.addEventListener('play', () => {
+            const member = members.find(m => m.id === currentPlayingMemberId);
+            if (member) {
+                // Hapus class active dari semua item
+                document.querySelectorAll('.song-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+                
+                // Tambahkan class active ke item yang sedang diputar
+                const allPlayButtons = document.querySelectorAll(".song-play-button");
+                allPlayButtons.forEach(btn => {
+                    const songItem = btn.closest(".song-item");
+                    if (songItem.querySelector(".song-title").textContent === member.favSong) {
+                        btn.textContent = "❚❚";
+                        songItem.classList.add('active'); // <-- BARIS INI SAJA YANG DITAMBAHKAN
+                    } else {
+                        btn.textContent = "▶";
+                    }
+                });
+            }
+        });
+
+        // Tambahkan juga di event pause untuk konsistensi
+        audio.addEventListener('pause', () => {
+            const member = members.find(m => m.id === currentPlayingMemberId);
+            if (member) {
+                document.querySelectorAll('.song-item').forEach(item => {
+                    const title = item.querySelector('.song-title')?.textContent;
+                    const btn = item.querySelector('.song-play-button');
+
+                    if (title === member.favSong) {
+                        item.classList.add('active');
+                        btn.textContent = "▶"; // ubah tombol langsung di sini
+                    }
+                });
+
+                // Juga update tombol mini player kalau ada
+                if (miniPlayButton) miniPlayButton.textContent = "▶";
+            }
+        });
+    </script>
+</body>
+</html>
